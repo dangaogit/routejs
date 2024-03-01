@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "baseUrl": "./",
+        "allowArbitraryExtensions": true,
+        "strict": true,
+        "declaration": true,
+        "sourceMap": true,
+        "verbatimModuleSyntax": true,
+        "noEmit": true,
+        "lib": [
+            "ESNext",
+            "DOM",
+            "DOM.Iterable"
+        ]
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}
