@@ -1,24 +1,6 @@
-class URIMatchResult {
-  private readonly pathParams: Record<string, string> = {}
-  private readonly queryParams: Record<string, string> = {}
-
-  public constructor(pathConfig: string, targetURI: string) {
-    const [ pathname, queryString ] = targetURI.split('?')
-    this.pathParams = analysisURIPathParams(pathConfig, pathname)
-    this.queryParams = analysisURIQueryParams(queryString)
-  }
-
-  public getPathParams(): Record<string, string> {
-    return {
-      ...this.pathParams
-    }
-  }
-
-  public getQueryParams(): Record<string, string> {
-    return {
-      ...this.queryParams
-    }
-  }
+export interface URIMatchResult {
+  getPathParams(): Record<string, string>;
+  getQueryParams(): Record<string, string>;
 }
 
 export class URIMatcher {
@@ -34,7 +16,7 @@ export class URIMatcher {
     if (!this.test(targetURI)) {
       throw new Error('URI not match')
     }
-    return new URIMatchResult(this.pathConfig, targetURI)
+    return new URIMatchResultImpl(this.pathConfig, targetURI)
   }
 }
 
@@ -58,4 +40,27 @@ function analysisURIQueryParams(queryString: string): Record<string, string> {
     result[key] = value
   }
   return result
+}
+
+class URIMatchResultImpl implements URIMatchResult {
+  private readonly pathParams: Record<string, string> = {}
+  private readonly queryParams: Record<string, string> = {}
+
+  public constructor(pathConfig: string, targetURI: string) {
+    const [ pathname, queryString ] = targetURI.split('?')
+    this.pathParams = analysisURIPathParams(pathConfig, pathname)
+    this.queryParams = analysisURIQueryParams(queryString)
+  }
+
+  public getPathParams(): Record<string, string> {
+    return {
+      ...this.pathParams
+    }
+  }
+
+  public getQueryParams(): Record<string, string> {
+    return {
+      ...this.queryParams
+    }
+  }
 }
