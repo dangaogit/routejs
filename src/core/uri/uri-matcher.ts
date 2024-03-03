@@ -4,11 +4,16 @@ export interface URIMatchResult {
 }
 
 export class URIMatcher {
-  public constructor(private readonly pathConfig: string) {
+
+  private get path(): string {
+    return join([this.baseURI, this.pathConfig])
+  }
+
+  public constructor(private readonly pathConfig: string, private readonly baseURI: string = '') {
   }
 
   public test(targetURI: string): boolean {
-    const reg = analysisPathConfigToRegExp(this.pathConfig, true)
+    const reg = analysisPathConfigToRegExp(this.path, true)
     return reg.test(targetURI)
   }
 
@@ -16,7 +21,7 @@ export class URIMatcher {
     if (!this.test(targetURI)) {
       throw new Error('URI not match')
     }
-    return new URIMatchResultImpl(this.pathConfig, targetURI)
+    return new URIMatchResultImpl(this.path, targetURI)
   }
 }
 
@@ -63,4 +68,17 @@ class URIMatchResultImpl implements URIMatchResult {
       ...this.queryParams
     }
   }
+}
+
+/**
+ * 拼接多段路径
+ * @param args 拼接的路径段
+ * @param separator 分隔符，默认 '/'
+ * @returns 拼接后的路径
+ * ```typescript
+ * join(['/a', 'b/', '/c']) => '/a/b/c'
+ * ```
+ */
+function join (args: string[], separator = '/'): string {
+  return args.join(separator).replace(new RegExp(`${separator}+`, 'g'), separator)
 }
