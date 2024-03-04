@@ -14,6 +14,20 @@ describe('route-matcher', () => {
     assert.equal(underTest?.parent, undefined)
     assert.equal(underTest?.route.path, routes[0].path)
   })
+  test('match uri & exact match', () => {
+    const routes: Route[] = [
+      {
+        path: '/a'
+      }
+    ]
+    const routeMatcher = new RouteMatcher(routes)
+    const underTestOfExact = routeMatcher.match('/a/b', true)
+    assert.equal(underTestOfExact, null)
+    const underTestOfAbsolute = routeMatcher.match('/a/b', false)
+    assert.equal(underTestOfAbsolute?.route.path, routes[0].path)
+    const underTestOfDefault = routeMatcher.match('/a/b')
+    assert.equal(underTestOfDefault?.route.path, routes[0].path)
+  })
   test('match uri & baseURI', () => {
     const routes: Route[] = [
       {
@@ -38,6 +52,31 @@ describe('route-matcher', () => {
             children: [
               {
                 path: '/b.1.1'
+              }
+            ]
+          }
+        ]
+      },
+    ]
+    const routeMatcher = new RouteMatcher(routes, [{ path: '/base' }])
+    const underTest = routeMatcher.match('/base/b/b.1/b.1.1')
+    assert.equal(underTest?.parent?.path, '/b.1')
+    assert.equal(underTest?.route.path, routes[1].children?.[0].children?.[0].path)
+  })
+  test('match uri & match children route & empty children', () => {
+    const routes: Route[] = [
+      {
+        path: '/a'
+      },
+      {
+        path: '/b',
+        children: [
+          {
+            path: '/b.1',
+            children: [
+              {
+                path: '/b.1.1',
+                children: []
               }
             ]
           }

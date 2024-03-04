@@ -8,7 +8,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/route/route-matcher.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/route/route-matcher.test.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/route/route-matcher.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/route/route-matcher.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/uri/uri-matcher.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/uri/uri-matcher.test.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/core/uri/uri-matcher.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/uri/uri-matcher.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -74,7 +73,7 @@
       <updated>1709280329605</updated>
       <workItem from="1709280331025" duration="74000" />
       <workItem from="1709433417514" duration="213000" />
-      <workItem from="1709433634307" duration="7999000" />
+      <workItem from="1709433634307" duration="8593000" />
     </task>
     <servers />
   </component>

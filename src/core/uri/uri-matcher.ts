@@ -12,8 +12,8 @@ export class URIMatcher {
   public constructor(private readonly pathConfig: string, private readonly baseURI: string = '') {
   }
 
-  public test(targetURI: string): boolean {
-    const reg = analysisPathConfigToRegExp(this.path, false)
+  public test(targetURI: string, exact = false): boolean {
+    const reg = analysisPathConfigToRegExp(this.path, exact)
     return reg.test(targetURI)
   }
 
@@ -32,8 +32,8 @@ function analysisURIPathParams(pathConfig: string, targetURI: string): Record<st
   }
 }
 
-function analysisPathConfigToRegExp(path: string, absoluteMatch = false): RegExp {
-  return new RegExp(`^${ path }/?${ absoluteMatch ? '$' : '' }`.replace(/\/:([^\\/]+)/g, (match) => {
+function analysisPathConfigToRegExp(path: string, exactMatch = false): RegExp {
+  return new RegExp(`^${ path }/?${ exactMatch ? '$' : '' }`.replace(/\/:([^\\/]+)/g, (match) => {
     return `\\/(?<${ match.slice(2) }>[^\\/]+)`
   }))
 }
