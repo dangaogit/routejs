@@ -1,25 +1,29 @@
-import type { Route } from './route'
+import type { Route, RouteMatchResult } from './route'
 
 export interface Router {
-  getCurrentRoute(): Route;
   /**
-   * Get the current full history queue of the router
+   * Get the current route of the router
+   * @returns the current matched route, or null if no route matched
    */
-  getHistoryQueue(): Route[];
+  getCurrentMatched(): RouteMatchResult | null;
   /**
-   * Get the current temporarily queue of the router
+   * Get the current full history stack of the router
+   */
+  getHistoryStack(): RouteMatchResult[];
+  /**
+   * Get the current temporarily stack of the router
    * temporarily queue is the queue that will be cleared after the next push navigation
    */
-  getTemporarilyQueue(): Route[];
+  getTemporarilyStack(): RouteMatchResult[];
   /**
    * navigate to the route
    * before navigate, the router will push the current route to the history queue and clear the temporary queue
    * @param target the route to navigate to
    */
-  navigateTo(target: Route | string): void;
+  navigateTo(target: string): void;
   /**
-   * go back or forward in the history queue
-   * if the delta out of the range of the history queue, the router will do nothing
+   * go back or forward in the history stack
+   * if the delta out of the range of the history stack, the router will do nothing
    * @param delta
    */
   go(delta: number): void;

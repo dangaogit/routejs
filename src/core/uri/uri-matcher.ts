@@ -1,15 +1,16 @@
 export interface URIMatchResult {
+  getOriginURI(): string;
   getPathParams(): Record<string, string>;
   getQueryParams(): Record<string, string>;
 }
 
 export class URIMatcher {
 
-  private get path(): string {
-    return join([this.baseURI, this.pathConfig])
+  public constructor(private readonly pathConfig: string, private readonly baseURI: string = '') {
   }
 
-  public constructor(private readonly pathConfig: string, private readonly baseURI: string = '') {
+  private get path(): string {
+    return join([ this.baseURI, this.pathConfig ])
   }
 
   public test(targetURI: string, exact = false): boolean {
@@ -51,10 +52,14 @@ class URIMatchResultImpl implements URIMatchResult {
   private readonly pathParams: Record<string, string> = {}
   private readonly queryParams: Record<string, string> = {}
 
-  public constructor(pathConfig: string, targetURI: string) {
+  public constructor(pathConfig: string, private readonly targetURI: string) {
     const [ pathname, queryString ] = targetURI.split('?')
     this.pathParams = analysisURIPathParams(pathConfig, pathname)
     this.queryParams = analysisURIQueryParams(queryString)
+  }
+
+  public getOriginURI(): string {
+    return this.targetURI
   }
 
   public getPathParams(): Record<string, string> {
@@ -79,6 +84,6 @@ class URIMatchResultImpl implements URIMatchResult {
  * join(['/a', 'b/', '/c']) => '/a/b/c'
  * ```
  */
-export function join (args: string[], separator = '/'): string {
+export function join(args: string[], separator = '/'): string {
   return args.join(separator).replace(new RegExp(`${separator}+`, 'g'), separator)
 }

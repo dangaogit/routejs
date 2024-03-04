@@ -1,6 +1,6 @@
 import { assert, describe, test } from 'vitest'
 import type { Route } from './route'
-import { RouteMatcher } from './route-matcher'
+import { RouteMatcherImpl } from './route-matcher.impl'
 
 describe('route-matcher', () => {
   test('match uri', () => {
@@ -9,7 +9,7 @@ describe('route-matcher', () => {
         path: '/a'
       }
     ]
-    const routeMatcher = new RouteMatcher(routes)
+    const routeMatcher = new RouteMatcherImpl(routes)
     const underTest = routeMatcher.match('/a')
     assert.equal(underTest?.parent, undefined)
     assert.equal(underTest?.route.path, routes[0].path)
@@ -20,7 +20,7 @@ describe('route-matcher', () => {
         path: '/a'
       }
     ]
-    const routeMatcher = new RouteMatcher(routes)
+    const routeMatcher = new RouteMatcherImpl(routes)
     const underTestOfExact = routeMatcher.match('/a/b', true)
     assert.equal(underTestOfExact, null)
     const underTestOfAbsolute = routeMatcher.match('/a/b', false)
@@ -34,7 +34,7 @@ describe('route-matcher', () => {
         path: '/a'
       }
     ]
-    const routeMatcher = new RouteMatcher(routes, [{ path: '/base'}])
+    const routeMatcher = new RouteMatcherImpl(routes, [ { path: '/base' } ])
     const underTest = routeMatcher.match('/base/a')
     assert.equal(underTest?.parent?.path, '/base')
     assert.equal(underTest?.route.path, routes[0].path)
@@ -58,7 +58,7 @@ describe('route-matcher', () => {
         ]
       },
     ]
-    const routeMatcher = new RouteMatcher(routes, [{ path: '/base' }])
+    const routeMatcher = new RouteMatcherImpl(routes, [ { path: '/base' } ])
     const underTest = routeMatcher.match('/base/b/b.1/b.1.1')
     assert.equal(underTest?.parent?.path, '/b.1')
     assert.equal(underTest?.route.path, routes[1].children?.[0].children?.[0].path)
@@ -83,7 +83,7 @@ describe('route-matcher', () => {
         ]
       },
     ]
-    const routeMatcher = new RouteMatcher(routes, [{ path: '/base' }])
+    const routeMatcher = new RouteMatcherImpl(routes, [ { path: '/base' } ])
     const underTest = routeMatcher.match('/base/b/b.1/b.1.1')
     assert.equal(underTest?.parent?.path, '/b.1')
     assert.equal(underTest?.route.path, routes[1].children?.[0].children?.[0].path)
@@ -97,7 +97,7 @@ describe('route-matcher', () => {
         path: '/a'
       }
     ]
-    const routeMatcher = new RouteMatcher(routes)
+    const routeMatcher = new RouteMatcherImpl(routes)
     const underTest = routeMatcher.match('/a')
     assert.equal(underTest?.parent, undefined)
     assert.equal(underTest?.route.path, routes[1].path)
@@ -111,7 +111,7 @@ describe('route-matcher', () => {
         path: '/a'
       }
     ]
-    const routeMatcher = new RouteMatcher(routes)
+    const routeMatcher = new RouteMatcherImpl(routes)
     const underTest = routeMatcher.match('/c')
     assert.equal(underTest, null)
   })
@@ -121,7 +121,7 @@ describe('route-matcher', () => {
         path: '/a/:par1'
       }
     ]
-    const routeMatcher = new RouteMatcher(routes)
+    const routeMatcher = new RouteMatcherImpl(routes)
     const underTest = routeMatcher.match('/a/par1value?q1=q1value&q2=q2value')
     assert.equal(underTest?.parent, undefined)
     assert.equal(underTest?.matchResult.getPathParams().par1, 'par1value')
