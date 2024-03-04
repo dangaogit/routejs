@@ -2,11 +2,11 @@ import type { Route, RouteMatchResult } from '../route/route'
 import type { Router } from '../route/router'
 import type { RouteMatcher } from '../route/route-matcher'
 
-export interface HistoryRouterConfig {
-  routes: Route[];
+export interface HistoryRouterConfig<T> {
+  routes: Route<T>[];
   baseURI: string;
   historyProvider: HistoryProvider;
-  routeMatcherProvider: RouteMatcher;
+  routeMatcherProvider: RouteMatcher<T>;
 }
 
 export type HistoryChangeEventListener = (source: string, target: string) => void
@@ -75,13 +75,13 @@ export class Stack<T> implements Iterable<T> {
 }
 
 
-export class HistoryRouter implements Router {
-  private readonly config: HistoryRouterConfig
-  private readonly historyStack = new Stack<RouteMatchResult>()
-  private readonly temporarilyStack = new Stack<RouteMatchResult>()
-  #cacheMatchResult: RouteMatchResult | null = null
+export class HistoryRouter<T = {}> implements Router<T> {
+  private readonly config: HistoryRouterConfig<T>
+  private readonly historyStack = new Stack<RouteMatchResult<T>>()
+  private readonly temporarilyStack = new Stack<RouteMatchResult<T>>()
+  #cacheMatchResult: RouteMatchResult<T> | null = null
 
-  public constructor(config: HistoryRouterConfig & Partial<Pick<HistoryRouterConfig, 'baseURI'>>) {
+  public constructor(config: HistoryRouterConfig<T> & Partial<Pick<HistoryRouterConfig<T>, 'baseURI'>>) {
     this.config = {
       ...config,
       baseURI: config.baseURI ?? ''
@@ -89,11 +89,11 @@ export class HistoryRouter implements Router {
     this.config.historyProvider.addEventListener('change', this.changeEventListener.bind(this))
   }
 
-  private get cacheMatchResult(): RouteMatchResult | null {
+  private get cacheMatchResult(): RouteMatchResult<T> | null {
     return this.#cacheMatchResult
   }
 
-  private set cacheMatchResult(value: RouteMatchResult | null) {
+  private set cacheMatchResult(value: RouteMatchResult<T> | null) {
     this.#cacheMatchResult = value
   }
 
@@ -101,7 +101,7 @@ export class HistoryRouter implements Router {
     return this.cacheMatchResult?.matchResult.getOriginURI()
   }
 
-  public getCurrentMatched(): RouteMatchResult | null {
+  public getCurrentMatched(): RouteMatchResult<T> | null {
     const { historyProvider: { getCurrentURI }, routeMatcherProvider } = this.config
     const uri = getCurrentURI()
     if (this.currentMatchURI === uri) {
@@ -114,11 +114,11 @@ export class HistoryRouter implements Router {
     return this.cacheMatchResult
   }
 
-  public getHistoryStack(): RouteMatchResult[] {
+  public getHistoryStack(): RouteMatchResult<T>[] {
     return [ ...this.historyStack ]
   }
 
-  public getTemporarilyStack(): RouteMatchResult[] {
+  public getTemporarilyStack(): RouteMatchResult<T>[] {
     return [ ...this.temporarilyStack ]
   }
 

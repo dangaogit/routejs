@@ -2,15 +2,15 @@ import type { Route, RouteMatchResult } from './route'
 import { join, URIMatcher } from '../uri/uri-matcher'
 import type { RouteMatcher } from './route-matcher'
 
-export class RouteMatcherImpl implements RouteMatcher {
-  public constructor(private readonly routes: Route[], private readonly parents: Route[] = []) {
+export class RouteMatcherImpl<T> implements RouteMatcher<T> {
+  public constructor(private readonly routes: Route<T>[], private readonly parents: Route<T>[] = []) {
   }
 
-  public match(uri: string, exact = false): RouteMatchResult | null {
-    let result: RouteMatchResult | null = null
+  public match(uri: string, exact = false): RouteMatchResult<T> | null {
+    let result: RouteMatchResult<T> | null = null
     for (const r of this.routes) {
       if (r.children && r.children.length > 0) {
-        const subMatchResult = new RouteMatcherImpl(r.children, [ ...this.parents, r ]).match(uri)
+        const subMatchResult = new RouteMatcherImpl<T>(r.children, [ ...this.parents, r ]).match(uri)
         if (!subMatchResult) {
           continue
         }

@@ -1,20 +1,20 @@
 import type { Route, RouteMatchResult } from './route'
 
-export interface Router {
+export interface Router<T = {}> {
   /**
    * Get the current route of the router
    * @returns the current matched route, or null if no route matched
    */
-  getCurrentMatched(): RouteMatchResult | null;
+  getCurrentMatched(): RouteMatchResult<T> | null;
   /**
    * Get the current full history stack of the router
    */
-  getHistoryStack(): RouteMatchResult[];
+  getHistoryStack(): RouteMatchResult<T>[];
   /**
    * Get the current temporarily stack of the router
    * temporarily queue is the queue that will be cleared after the next push navigation
    */
-  getTemporarilyStack(): RouteMatchResult[];
+  getTemporarilyStack(): RouteMatchResult<T>[];
   /**
    * navigate to the route
    * before navigate, the router will push the current route to the history queue and clear the temporary queue
@@ -31,10 +31,10 @@ export interface Router {
    * Register routes to the router
    * @param routes
    */
-  registerRoutes(routes: Route[]): void;
+  registerRoutes(routes: Route<T>[]): void;
   /**
    * Unregister routes from the router
    * @param routes
    */
-  unregisterRoutes(routes: Route[]): void;
+  unregisterRoutes(routes: Route<T>[]): void;
 }

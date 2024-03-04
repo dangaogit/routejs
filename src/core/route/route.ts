@@ -1,12 +1,12 @@
 import type { URIMatchResult } from '../uri/uri-matcher'
 
-export interface Route {
+export type Route<T = {}> = T & {
   path: string;
-  children?: Route[];
+  children?: Route<T>[];
 }
 
-export interface RouteMatchResult {
-  route: Route;
-  parent?: Route;
+export interface RouteMatchResult<T = {}> {
+  route: Route<T>;
+  parent?: Route<T>;
   matchResult: URIMatchResult;
 }
