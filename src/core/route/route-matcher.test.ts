@@ -1,4 +1,4 @@
-import { assert, describe, expect, test } from 'vitest'
+import { assert, describe, test } from 'vitest'
 import type { Route } from './route'
 import { RouteMatcher } from './route-matcher'
 
@@ -20,10 +20,34 @@ describe('route-matcher', () => {
         path: '/a'
       }
     ]
-    const routeMatcher = new RouteMatcher(routes, '/base')
+    const routeMatcher = new RouteMatcher(routes, [{ path: '/base'}])
     const underTest = routeMatcher.match('/base/a')
-    assert.equal(underTest?.parent, undefined)
+    assert.equal(underTest?.parent?.path, '/base')
     assert.equal(underTest?.route.path, routes[0].path)
+  })
+  test('match uri & match children route', () => {
+    const routes: Route[] = [
+      {
+        path: '/a'
+      },
+      {
+        path: '/b',
+        children: [
+          {
+            path: '/b.1',
+            children: [
+              {
+                path: '/b.1.1'
+              }
+            ]
+          }
+        ]
+      },
+    ]
+    const routeMatcher = new RouteMatcher(routes, [{ path: '/base' }])
+    const underTest = routeMatcher.match('/base/b/b.1/b.1.1')
+    assert.equal(underTest?.parent?.path, '/b.1')
+    assert.equal(underTest?.route.path, routes[1].children?.[0].children?.[0].path)
   })
   test('match uri & multi route', () => {
     const routes: Route[] = [

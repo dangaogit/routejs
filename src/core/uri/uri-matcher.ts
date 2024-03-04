@@ -13,7 +13,7 @@ export class URIMatcher {
   }
 
   public test(targetURI: string): boolean {
-    const reg = analysisPathConfigToRegExp(this.path, true)
+    const reg = analysisPathConfigToRegExp(this.path, false)
     return reg.test(targetURI)
   }
 
@@ -79,6 +79,6 @@ class URIMatchResultImpl implements URIMatchResult {
  * join(['/a', 'b/', '/c']) => '/a/b/c'
  * ```
  */
-function join (args: string[], separator = '/'): string {
+export function join (args: string[], separator = '/'): string {
   return args.join(separator).replace(new RegExp(`${separator}+`, 'g'), separator)
 }

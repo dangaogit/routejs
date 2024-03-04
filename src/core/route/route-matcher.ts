@@ -1,28 +1,31 @@
 import type { Route, RouteMatchResult } from './route'
-import { URIMatcher } from '../uri/uri-matcher'
+import { join, URIMatcher } from '../uri/uri-matcher'
 
 export class RouteMatcher {
-  public constructor(private readonly routes: Route[], private readonly baseURI: string = '/') {
+  public constructor(private readonly routes: Route[], private readonly parents: Route[] = []) {
   }
 
   public match(uri: string): RouteMatchResult | null {
-    let matchRoute: Route | undefined
-    let matcher: URIMatcher | undefined
+    let result: RouteMatchResult | null = null
     for (const r of this.routes) {
-      const m = new URIMatcher(r.path, this.baseURI)
+      if (r.children) {
+        const subMatchResult = new RouteMatcher(r.children, [...this.parents, r]).match(uri)
+        if (!subMatchResult) {
+          continue
+        }
+        result = subMatchResult
+        break
+      }
+      const m = new URIMatcher(r.path, join(this.parents.map(p => p.path)))
       if (m.test(uri)) {
-        matchRoute = r
-        matcher = m
+        result = {
+          route: r,
+          parent: this.parents[this.parents.length - 1],
+          matchResult: m.match(uri)
+        }
         break
       }
     }
-    if (!matchRoute || !matcher) {
-      return null
-    }
-    return {
-      route: matchRoute,
-      parent: undefined,
-      matchResult: matcher.match(uri)
-    }
+    return result
   }
 }

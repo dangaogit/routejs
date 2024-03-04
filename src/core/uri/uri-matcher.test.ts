@@ -9,6 +9,13 @@ describe('uri-matcher', () => {
     assert.equal(underTest.test(targetURI), true)
     assert.equal(underTest.test(targetURI), true)
   })
+  test('match normal uri & baseURI', () => {
+    const pathConfig = '/path'
+    const targetURI = '/base/path1/path2'
+    const underTest = new URIMatcher(pathConfig, '/base')
+    assert.equal(underTest.test(targetURI), true)
+    assert.equal(underTest.test(targetURI), true)
+  })
   test('not match uri', () => {
     const pathConfig = '/path/:par1/path2/:par2'
     const targetURI = '/path/1/path2'
