@@ -1,28 +1,29 @@
 {
-    "compilerOptions": {
-        "target": "ESNext",
-        "module": "ESNext",
-        "moduleResolution": "Node",
-        "baseUrl": "./",
-        "allowArbitraryExtensions": true,
-        "strict": true,
-        "declaration": true,
-        "sourceMap": true,
-        "verbatimModuleSyntax": true,
-        "noEmit": true,
-        "lib": [
-            "ESNext",
-            "DOM",
-            "DOM.Iterable"
-        ],
-        "types": [
-            "vitest"
-        ]
-    },
-    "include": [
-        "src/**/*.ts"
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "baseUrl": "./",
+    "allowArbitraryExtensions": true,
+    "strict": true,
+    "declaration": true,
+    "sourceMap": true,
+    "verbatimModuleSyntax": true,
+    "allowSyntheticDefaultImports": true,
+    "noEmit": true,
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
     ],
-    "exclude": [
-        "node_modules"
+    "types": [
+      "vitest"
     ]
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
