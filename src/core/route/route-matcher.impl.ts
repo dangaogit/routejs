@@ -1,5 +1,5 @@
 import type { Route, RouteMatchResult } from './route'
-import { join, URIMatcher } from '../uri/uri-matcher'
+import { URIMatcher } from '../uri/uri-matcher'
 import type { RouteMatcher } from './route-matcher'
 
 export class RouteMatcherImpl<T> implements RouteMatcher<T> {
@@ -7,26 +7,24 @@ export class RouteMatcherImpl<T> implements RouteMatcher<T> {
   }
 
   public match(uri: string, exact = false): RouteMatchResult<T> | null {
-    let result: RouteMatchResult<T> | null = null
     for (const r of this.routes) {
-      if (r.children && r.children.length > 0) {
-        const subMatchResult = new RouteMatcherImpl<T>(r.children, [ ...this.parents, r ]).match(uri)
-        if (!subMatchResult) {
-          continue
-        }
-        result = subMatchResult
-        break
+      const fullRoutes = [ ...this.parents, r ]
+      const m = new URIMatcher(...fullRoutes.map(p => p.path))
+      if (!m.test(uri, exact)) {
+        continue
       }
-      const m = new URIMatcher(r.path, join(this.parents.map(p => p.path)))
-      if (m.test(uri, exact)) {
-        result = {
-          route: r,
-          parents: this.parents,
-          matchResult: m.match(uri)
+      if (r.children && r.children.length > 0) {
+        const subMatchResult = new RouteMatcherImpl<T>(r.children, fullRoutes).match(uri)
+        if (subMatchResult) {
+          return subMatchResult
         }
-        break
+      }
+      return {
+        route: r,
+        parents: this.parents,
+        matchResult: m.match(uri)
       }
     }
-    return result
+    return null
   }
 }

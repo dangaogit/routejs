@@ -6,11 +6,14 @@ export interface URIMatchResult {
 
 export class URIMatcher {
 
-  public constructor(private readonly pathConfig: string, private readonly baseURI: string = '') {
+  private readonly sections: string[] = []
+
+  public constructor(...pathSections: string[]) {
+    this.sections = pathSections
   }
 
   private get path(): string {
-    return join([ this.baseURI, this.pathConfig ])
+    return join(this.sections)
   }
 
   public test(targetURI: string, exact = false): boolean {

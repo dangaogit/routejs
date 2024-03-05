@@ -14,6 +14,22 @@ describe('route-matcher', () => {
     assert.equal(underTest?.parents.length, 0)
     assert.equal(underTest?.route.path, routes[0].path)
   })
+  test('match uri & match not leaf node', () => {
+    const routes: Route[] = [
+      {
+        path: '/a',
+        children: [
+          {
+            path: '/a.1'
+          }
+        ]
+      }
+    ]
+    const routeMatcher = new RouteMatcherImpl(routes)
+    const underTest = routeMatcher.match('/a')
+    assert.equal(underTest?.parents.length, 0)
+    assert.equal(underTest?.route.path, '/a')
+  })
   test('match uri & exact match', () => {
     const routes: Route[] = [
       {

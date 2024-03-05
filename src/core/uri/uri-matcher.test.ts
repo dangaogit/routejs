@@ -12,7 +12,7 @@ describe('uri-matcher', () => {
   test('match normal uri & baseURI', () => {
     const pathConfig = '/path'
     const targetURI = '/base/path1/path2'
-    const underTest = new URIMatcher(pathConfig, '/base')
+    const underTest = new URIMatcher('/base', pathConfig)
     assert.equal(underTest.test(targetURI), true)
     assert.equal(underTest.test(targetURI), true)
   })
