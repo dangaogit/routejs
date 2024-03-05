@@ -1,5 +1,5 @@
 import type { Route, RouteMatchResult } from '../route/route'
-import type { Router } from '../route/router'
+import type { Router, RouterChangeEventListener } from '../route/router'
 import type { RouteMatcher } from '../route/route-matcher'
 
 export interface HistoryRouterConfig<T> {
@@ -79,6 +79,7 @@ export class HistoryRouter<T = {}> implements Router<T> {
   private readonly config: HistoryRouterConfig<T>
   private readonly historyStack = new Stack<RouteMatchResult<T>>()
   private readonly temporarilyStack = new Stack<RouteMatchResult<T>>()
+  private readonly routeChangeEventListeners = new Set<RouterChangeEventListener<T>>()
   #cacheMatchResult: RouteMatchResult<T> | null = null
 
   public constructor(config: HistoryRouterConfig<T> & Partial<Pick<HistoryRouterConfig<T>, 'baseURI'>>) {
@@ -94,11 +95,23 @@ export class HistoryRouter<T = {}> implements Router<T> {
   }
 
   private set cacheMatchResult(value: RouteMatchResult<T> | null) {
+    const source = this.#cacheMatchResult
     this.#cacheMatchResult = value
+    for (const listener of this.routeChangeEventListeners) {
+      listener(source, value)
+    }
   }
 
   private get currentMatchURI(): string | undefined {
     return this.cacheMatchResult?.matchResult.getOriginURI()
+  }
+
+  public removeEventListener(type: 'change', call: RouterChangeEventListener<T>): void {
+    this.routeChangeEventListeners.delete(call)
+  }
+
+  public addEventListener(type: 'change', call: RouterChangeEventListener<T>): void {
+    this.routeChangeEventListeners.add(call)
   }
 
   public getCurrentMatched(): RouteMatchResult<T> | null {

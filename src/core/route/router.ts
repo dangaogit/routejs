@@ -1,5 +1,7 @@
 import type { Route, RouteMatchResult } from './route'
 
+export type RouterChangeEventListener<T> = (source: RouteMatchResult<T> | null, target: RouteMatchResult<T> | null) => void
+
 export interface Router<T = {}> {
   /**
    * Get the current route of the router
@@ -37,4 +39,6 @@ export interface Router<T = {}> {
    * @param routes
    */
   unregisterRoutes(routes: Route<T>[]): void;
+  addEventListener(type: 'change', call: RouterChangeEventListener<T>): void;
+  removeEventListener(type: 'change', call: RouterChangeEventListener<T>): void;
 }
