@@ -55,7 +55,7 @@ describe('history-router', () => {
           callRouteMatcherCount++
           return {
             route: routes[0],
-            parent: undefined,
+            parents: [],
             matchResult: {
               getQueryParams(): Record<string, string> {
                 return {}

@@ -7,6 +7,6 @@ export type Route<T = {}> = T & {
 
 export interface RouteMatchResult<T = {}> {
   route: Route<T>;
-  parent?: Route<T>;
+  parents: Route<T>[];
   matchResult: URIMatchResult;
 }

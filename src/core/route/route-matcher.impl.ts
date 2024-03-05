@@ -21,7 +21,7 @@ export class RouteMatcherImpl<T> implements RouteMatcher<T> {
       if (m.test(uri, exact)) {
         result = {
           route: r,
-          parent: this.parents[this.parents.length - 1],
+          parents: this.parents,
           matchResult: m.match(uri)
         }
         break
