@@ -79,7 +79,7 @@ describe('history-router', () => {
     assert.equal(router.getCurrentMatched()?.route.path, routes[0].path)
   })
 
-  test('history-router & historyStack', () => {
+  test('history-router & historyStack', async () => {
     const routes: Route[] = [
       {
         path: '/a'
@@ -112,22 +112,22 @@ describe('history-router', () => {
       routeMatcherProvider: new RouteMatcherImpl(routes, [ { path: '/base' } ])
     })
     assert.equal(router.getCurrentMatched()?.route.path, routes[0].path)
-    router.navigateTo('/base/b')
+    await router.navigateTo('/base/b')
     assert.equal(router.getCurrentMatched()?.route.path, routes[1].path)
     assert.equal(router.getHistoryStack().length, 2)
     assert.equal(router.getHistoryStack()[1].route.path, routes[1].path)
     assert.equal(router.getTemporarilyStack().length, 0)
-    router.navigateTo('/base/c')
+    await router.navigateTo('/base/c')
     assert.equal(router.getTemporarilyStack().length, 0)
-    router.go(-2)
+    await router.go(-2)
     assert.equal(callGoCount, 1)
     assert.equal(router.getTemporarilyStack().length, 2)
     assert.equal(router.getCurrentMatched()?.route.path, routes[0].path)
-    router.go(1)
+    await router.go(1)
     assert.equal(callGoCount, 2)
     assert.equal(router.getTemporarilyStack().length, 1)
     assert.equal(router.getCurrentMatched()?.route.path, '/b')
-    router.navigateTo('/base/a')
+    await router.navigateTo('/base/a')
     assert.equal(router.getTemporarilyStack().length, 0)
     assert.equal(router.getHistoryStack().length, 3)
   })

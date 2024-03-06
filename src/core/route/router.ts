@@ -22,13 +22,13 @@ export interface Router<T = {}> {
    * before navigate, the router will push the current route to the history queue and clear the temporary queue
    * @param target the route to navigate to
    */
-  navigateTo(target: string): void;
+  navigateTo(target: string): Promise<void>;
   /**
    * go back or forward in the history stack
    * if the delta out of the range of the history stack, the router will do nothing
    * @param delta
    */
-  go(delta: number): void;
+  go(delta: number): Promise<void>;
   /**
    * Register routes to the router
    * @param routes

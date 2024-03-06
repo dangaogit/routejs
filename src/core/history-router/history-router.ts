@@ -135,12 +135,12 @@ export class HistoryRouter<T = {}> implements Router<T> {
     return [ ...this.temporarilyStack ]
   }
 
-  public navigateTo(target: string): void {
+  public async navigateTo(target: string): Promise<void> {
     this.navToStack(target)
-    this.config.historyProvider.navigateTo(target)
+    await this.nextTick(() => this.config.historyProvider.navigateTo(target))
   }
 
-  public go(delta: number): void {
+  public async go(delta: number): Promise<void> {
     if (delta < 0) {
       const popped = this.historyStack.pop(Math.abs(delta))
       this.temporarilyStack.push(...popped)
@@ -151,9 +151,9 @@ export class HistoryRouter<T = {}> implements Router<T> {
     const latest = this.historyStack.getLatest()
     if (latest) {
       this.cacheMatchResult = latest
-      this.config.historyProvider.navigateTo(latest.matchResult.getOriginURI())
+      await this.nextTick(() => this.config.historyProvider.navigateTo(latest.matchResult.getOriginURI()))
     }
-    this.config.historyProvider.go(delta)
+    await this.nextTick(() => this.config.historyProvider.go(delta))
   }
 
   public registerRoutes(routes: Route[]): void {
@@ -162,6 +162,15 @@ export class HistoryRouter<T = {}> implements Router<T> {
 
   public unregisterRoutes(routes: Route[]): void {
     throw new Error('Method not implemented.');
+  }
+
+  private async nextTick(fun: () => void): Promise<void> {
+    return new Promise((r) => {
+      setTimeout(() => {
+        fun()
+        r()
+      }, 0)
+    })
   }
 
   private navToStack(target: string): void {
